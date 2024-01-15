@@ -29,6 +29,26 @@ typedef InlineCodeBuilder = Widget Function(
 /// Build quote code block.
 typedef QuoteBuilder = Widget Function(BuildContext context, Widget child);
 
+typedef MentionBuilder = InlineSpan Function(
+  BuildContext context,
+  String userName,
+  String? host,
+  String acct,
+);
+
+typedef HashTagBuilder = InlineSpan Function(
+  BuildContext context,
+  String hashTag,
+);
+
+typedef LinkBuilder = InlineSpan Function(
+  BuildContext context,
+  String url,
+  Widget child,
+);
+
+typedef UrlBuilder = InlineSpan Function(BuildContext context, String url);
+
 /// Build search block.
 typedef SearchBuilder = Widget Function(BuildContext context, String query,
     FutureOr<void> Function(String)? onPressed);
@@ -76,6 +96,14 @@ class Mfm extends InheritedWidget {
 
   /// quote block builder
   final QuoteBuilder? quoteBuilder;
+
+  final MentionBuilder? mentionBuilder;
+
+  final HashTagBuilder? hashTagBuilder;
+
+  final LinkBuilder? linkBuilder;
+
+  final UrlBuilder? urlBuilder;
 
   /// search block builder
   final SearchBuilder? searchBuilder;
@@ -154,6 +182,10 @@ class Mfm extends InheritedWidget {
     this.inlineCodeBuilder,
     this.smallStyleBuilder,
     this.quoteBuilder,
+    this.mentionBuilder,
+    this.hashTagBuilder,
+    this.linkBuilder,
+    this.urlBuilder,
     this.searchBuilder,
     this.unixTimeBuilder,
     this.lineHeight = 1.35,

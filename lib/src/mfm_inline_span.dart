@@ -199,45 +199,76 @@ class MfmInlineSpan extends TextSpan {
             ),
           )
         else if (node is MfmMention)
-          TextSpan(
-            style: style?.merge(
-              Mfm.of(context).mentionStyle ??
-                  TextStyle(color: Theme.of(context).primaryColor),
-            ),
-            text: node.acct.tight,
-            recognizer: TapGestureRecognizer()
-              ..onTap = () => Mfm.of(context)
-                  .mentionTap
-                  ?.call(node.username, node.host, node.acct),
-          )
-        else if (node is MfmHashTag)
-          TextSpan(
-              style: style?.merge(
-                Mfm.of(context).hashtagStyle ??
-                    TextStyle(color: Theme.of(context).primaryColor),
-              ),
-              text: "#${node.hashTag.tight}",
-              recognizer: TapGestureRecognizer()..onTap = () => Mfm.of(context).hashtagTap?.call(node.hashTag))
-        else if (node is MfmLink)
-          WidgetSpan(
-            alignment: PlaceholderAlignment.baseline,
-            baseline: TextBaseline.alphabetic,
-            child: GestureDetector(
-              onTap: () => Mfm.of(context).linkTap?.call(node.url),
-              child: AbsorbPointer(
-                child: MfmElementWidget(
+          Mfm.of(context).mentionBuilder == null
+              ? TextSpan(
                   style: style?.merge(
-                    Mfm.of(context).linkStyle ??
+                    Mfm.of(context).mentionStyle ??
                         TextStyle(color: Theme.of(context).primaryColor),
                   ),
-                  nodes: node.children,
-                  depth: depth + 1,
-                ),
-              ),
-            ),
-          )
+                  text: node.acct.tight,
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => Mfm.of(context)
+                        .mentionTap
+                        ?.call(node.username, node.host, node.acct),
+                )
+              : Mfm.of(context).mentionBuilder!(
+                  context,
+                  node.username,
+                  node.host,
+                  node.acct,
+                )
+        else if (node is MfmHashTag)
+          Mfm.of(context).hashTagBuilder == null
+              ? TextSpan(
+                  style: style?.merge(
+                    Mfm.of(context).hashtagStyle ??
+                        TextStyle(color: Theme.of(context).primaryColor),
+                  ),
+                  text: "#${node.hashTag.tight}",
+                  recognizer: TapGestureRecognizer()
+                    ..onTap =
+                        () => Mfm.of(context).hashtagTap?.call(node.hashTag),
+                )
+              : Mfm.of(context).hashTagBuilder!(context, node.hashTag)
+        else if (node is MfmLink)
+          Mfm.of(context).linkBuilder == null
+              ? WidgetSpan(
+                  alignment: PlaceholderAlignment.baseline,
+                  baseline: TextBaseline.alphabetic,
+                  child: GestureDetector(
+                    onTap: () => Mfm.of(context).linkTap?.call(node.url),
+                    child: MfmElementWidget(
+                      style: style?.merge(
+                        Mfm.of(context).linkStyle ??
+                            TextStyle(color: Theme.of(context).primaryColor),
+                      ),
+                      nodes: node.children,
+                      depth: depth + 1,
+                    ),
+                  ),
+                )
+              : Mfm.of(context).linkBuilder!(
+                  context,
+                  node.url,
+                  MfmElementWidget(
+                    style: style?.merge(
+                      Mfm.of(context).linkStyle ??
+                          TextStyle(color: Theme.of(context).primaryColor),
+                    ),
+                    nodes: node.children,
+                    depth: depth + 1,
+                  ),
+                )
         else if (node is MfmURL)
-          TextSpan(style: style?.merge(Mfm.of(context).linkStyle ?? TextStyle(color: Theme.of(context).primaryColor)), text: node.value.decodeUri.tight, recognizer: TapGestureRecognizer()..onTap = () => Mfm.of(context).linkTap?.call(node.value))
+          Mfm.of(context).urlBuilder == null
+              ? TextSpan(
+                  style: style?.merge(Mfm.of(context).linkStyle ??
+                      TextStyle(color: Theme.of(context).primaryColor)),
+                  text: node.value.decodeUri.tight,
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () => Mfm.of(context).linkTap?.call(node.value),
+                )
+              : Mfm.of(context).urlBuilder!(context, node.value)
         else if (node is MfmFn)
           MfmFnSpan(context: context, style: style, function: node, depth: depth + 1)
         else if (node is MfmMathBlock)
