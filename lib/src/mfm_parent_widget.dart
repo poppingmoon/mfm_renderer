@@ -29,8 +29,7 @@ class MfmParentWidgetState extends State<MfmParentWidget> {
     final style = Theme.of(context)
         .textTheme
         .bodyMedium!
-        .merge(Mfm.of(context).style ?? const TextStyle())
-        .merge(const TextStyle(height: 0));
+        .merge(Mfm.of(context).style ?? const TextStyle());
 
     final scaledStyle = style.copyWith(
         fontSize: style.fontSize! * MediaQuery.of(context).textScaleFactor);

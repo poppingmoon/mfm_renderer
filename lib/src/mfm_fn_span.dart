@@ -70,8 +70,7 @@ class MfmFnSpan extends TextSpan {
       return [
         MfmInlineSpan(
           context: context,
-          style: style?.merge(
-              TextStyle(height: 0, fontSize: (style?.fontSize ?? 22) * 2)),
+          style: style?.merge(TextStyle(fontSize: (style?.fontSize ?? 22) * 2)),
           nodes: function.children,
           depth: depth + 1,
         )
@@ -81,8 +80,7 @@ class MfmFnSpan extends TextSpan {
       return [
         MfmInlineSpan(
           context: context,
-          style: style?.merge(
-              TextStyle(height: 0, fontSize: (style?.fontSize ?? 22) * 4)),
+          style: style?.merge(TextStyle(fontSize: (style?.fontSize ?? 22) * 4)),
           nodes: function.children,
           depth: depth + 1,
         )
@@ -94,7 +92,6 @@ class MfmFnSpan extends TextSpan {
         MfmInlineSpan(
           context: context,
           style: style?.merge(TextStyle(
-              height: 0,
               fontSize:
                   (DefaultTextStyle.of(context).style.fontSize ?? 22) * 6)),
           nodes: function.children,
