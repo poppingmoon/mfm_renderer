@@ -53,31 +53,25 @@ class MfmFnSpinState extends State<MfmFnSpin> with TickerProviderStateMixin {
   void startAnimation() {
     _controller?.stop();
     _controller?.dispose();
-    _controller = null;
 
-    Future(() async {
-      final controller = AnimationController(
-          vsync: this,
-          duration: Duration(
-              milliseconds: (widget.speed * 1000).toInt().if0(999) *
-                  (widget.direction == MfmFnSpinDirection.alternate ? 2 : 1)));
-      await Future.delayed(
-          Duration(milliseconds: (widget.delay * 1000).toInt()));
+    _controller = AnimationController(
+      vsync: this,
+      duration: Duration(
+        milliseconds: (widget.speed * 1000).toInt().if0(999) *
+            (widget.direction == MfmFnSpinDirection.alternate ? 2 : 1),
+      ),
+    );
 
-      if (widget.direction == MfmFnSpinDirection.reverse) {
-        _rotationAnimation = controller.drive(_rotationReverseSequence);
-        controller.repeat();
-      } else if (widget.direction == MfmFnSpinDirection.alternate) {
-        _rotationAnimation = controller.drive(_rotationAlternativeSequence);
-        controller.repeat();
-      } else if (widget.direction == MfmFnSpinDirection.normal) {
-        _rotationAnimation = controller.drive(_rotationSequence);
-        controller.repeat();
-      }
-      setState(() {
-        _controller = controller;
-      });
-    });
+    if (widget.direction == MfmFnSpinDirection.reverse) {
+      _rotationAnimation = _controller?.drive(_rotationReverseSequence);
+      _controller?.repeat();
+    } else if (widget.direction == MfmFnSpinDirection.alternate) {
+      _rotationAnimation = _controller?.drive(_rotationAlternativeSequence);
+      _controller?.repeat();
+    } else if (widget.direction == MfmFnSpinDirection.normal) {
+      _rotationAnimation = _controller?.drive(_rotationSequence);
+      _controller?.repeat();
+    }
   }
 
   @override
